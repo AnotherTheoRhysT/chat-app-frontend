@@ -17,9 +17,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { useContext, useRef, useState } from "react"
 import axios from "axios"
-// import { redirect } from "next/navigation"
 import { AuthContext } from '../_app'
 import { useRouter } from "next/router"
+import useUser from '@/data/useUser'
 
 
 
@@ -42,17 +42,15 @@ const Login = () => {
 
 
 	// Handle form submission
-  async function onSubmit(formData) {
+  const onSubmit = async (formData) => {
     console.log('submitting...')
     await axios.get(`${process.env.SERVER_URL}/sanctum/csrf-cookie`)
     try {
-
-      let loginRes = await axios.post(`${process.env.SERVER_URL}/login`, {
+      await axios.post(`${process.env.SERVER_URL}/login`, {
         email: formData.email,
         password: formData.password
       })
       const { data: userData } = await axios.get(`${process.env.SERVER_URL}/api/user`)
-      console.log(loginRes)
       setAuth(userData)
 			router.push('/chat')
     } catch (err) {
@@ -63,42 +61,39 @@ const Login = () => {
 
   return (
 		<ChatLayout>
-			{ auth &&
-				<pre>
-					{JSON.stringify(auth)}
-				</pre>
-			}
-			<Form {...form}	>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Email</FormLabel>
-								<FormControl>
-									<Input {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="password"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Password</FormLabel>
-								<FormControl>
-									<Input {...field} type="password"/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit">Submit</Button>
-				</form>
-			</Form>
+			<main className='grid place-items-center'>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6 max-w-md">
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Password</FormLabel>
+									<FormControl>
+										<Input {...field} type="password"/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+			</main>
 		</ChatLayout>
   )
 }
