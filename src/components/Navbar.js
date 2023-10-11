@@ -20,7 +20,7 @@ const Navbar = () => {
 			})
 	}
 	return (
-		<div className='flex justify-between'>
+		<nav className='flex justify-between'>
 			<Button>
 				<Link href='/chat'>Home</Link>
 			</Button>
@@ -37,7 +37,7 @@ const Navbar = () => {
 					</Button>
 				)
 			}
-		</div>
+		</nav>
 	)
 }
 
